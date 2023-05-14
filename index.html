@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <style>
+            .fullscreen:-webkit-full-screen {
+                width: auto !important;
+                height: auto !important;
+                margin:auto !important;
+            }
+                .fullscreen:-moz-full-screen {
+                width: auto !important;
+                height: auto !important;
+                margin:auto !important;
+            }
+                .fullscreen:-ms-fullscreen {
+                width: auto !important;
+                height: auto !important;
+                margin:auto !important;
+            } 
+        </style>
+        <meta charset="utf-8" />
+        <title>Coucou les loulou</title>
+        <script>
+            const sleep = ms => new Promise(res => setTimeout(res, ms));
+            var z_press = false;
+            var i = 0;
+            var audio = new Audio("audio/Two Steps From Hell-Archangel.mp3")
+
+            var diapo = [
+                {src:"image/PA.png",time:2000,auto_skip:true,special_act:"A"},
+                {src:"image/PB.png",time:2000,auto_skip:true,special_act:""},
+                {src:"image/Y.png",time:2000,auto_skip:true,special_act:""},
+                {src:"image/anGlishe.png",time:250,auto_skip:true,special_act:""},
+                {src:"image/PC.png",time:2000,auto_skip:true,special_act:""},
+                {src:"image/PD.png",time:2000,auto_skip:true,special_act:""},
+                {src:"image/PE.png",time:2000,auto_skip:true,special_act:""},
+                {src:"image/PF.png",time:1000,auto_skip:true,special_act:""},
+                {src:"image/d08f6230-f819-11ea-a9bf-5fecdeb61aaf.jpeg",time:100,auto_skip:true,special_act:""},
+                {src:"image/PF.png",time:500,auto_skip:true,special_act:""},
+                {src:"image/PG.png",time:2000,auto_skip:true,special_act:""},
+                {src:"image/parc.jpeg",time:2000,auto_skip:false,special_act:"B"},
+            ]
+
+            document.addEventListener("keydown", function(event) {
+				if (event.keyCode == 90) {
+					z_press = true;
+				};
+			}
+			);
+			document.addEventListener("keyup", function(event) {
+				if (event.keyCode == 90) {
+					z_press = false;
+                }
+			}
+			);
+
+            async function waitKey() {
+                await sleep(100)
+                if (z_press==false) {
+                    waitKey();
+                }
+                else {
+                    return
+                }
+            }
+
+            async function makeFullScreen() {
+                var divObj = document.getElementById("theImage");
+                //Use the specification method before using prefixed versions
+                if (divObj.requestFullscreen) {
+                    divObj.requestFullscreen();
+                }
+                else if (divObj.msRequestFullscreen) {
+                    divObj.msRequestFullscreen();               
+                }
+                else if (divObj.mozRequestFullScreen) {
+                    divObj.mozRequestFullScreen();      
+                }
+                else if (divObj.webkitRequestFullscreen) {
+                    divObj.webkitRequestFullscreen();       
+                } else {
+                    console.log("Fullscreen API is not supported");
+                }
+
+                if (diapo[i].special_act=="A") {
+                    audio.play()
+                }
+                else if (diapo[i].special_act=="B") {
+                    audio.pause()
+                }
+                if (diapo[i].auto_skip==true) {
+                    divObj.setAttribute("src",diapo[i].src);
+                    await sleep(diapo[i].time);
+                    makeFullScreen();
+                }
+                else {
+                    divObj.setAttribute("src",diapo[i].src);
+                }
+                i+=1;
+            }
+        </script>
+    </head>
+
+    <body>
+        <img onClick="makeFullScreen()" id="theImage" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATkAAAChCAMAAACLfThZAAAAk1BMVEVgo7z///9aoLqgxdRVnrjS4upRnLfx9viz0d2nytiUv9Dh5OUACCCNu82wz9wbO0aAtMhtqsEAFijCxsh9ssfI3OX0+Pq+wsTq7O0AHy4qRU8AJzU5T1iBjJCawdF0rsSjq66WoKTR1dZSZWx3hIoAABuutblfb3aLlpo1TFVCV2BqeX9LXmbKz9EAESUHMj8AABEX9JKkAAAC/UlEQVR4nO3de2/aOhiAcdth1Da1G0O4jZJAuwvrSne+/6c7ryk729HRdCRrAS19fqIJ5Ko8IvE/VasUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgD/LaBiuEG7+bgjml083XughWIwvX+7m2hf9W9xQrhDlSlGuFOVKUa4U5UpRrhTlSlGu1FDKLZbL5UTmy1We5DPIgvx+tds/9HC+4ZSb3D4+rj9ovVlqffy4l5QfH5+nn/TD9PN2ve/hhAMqt9CT6VHfzbT++vReyt1O9OGLvpeax+mqhzMOp5wc9Wmfy91MV5vjqdzXZ70+ysrprIczDqrc8yGX2z3r7We92Nytv0xu1vkhN132cMbhlFtIrGUu93S3udusFi/HfI++P2j98MLd+muTl/3u/l7rb7PJixz/fq//ykOtnt0e9pttDyccTLnVdrvdyXw7WebZbKc/vH7RHg7bPp5ywyl3eZQrRblSlCtFuVKUK0W5UpQrRblS1yjH75UUMm01BK25eDllhuHy4QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAGmfPPf5f++uP3Zec/kmH+d9shMpUxJnTSwJxSyFymKZ7fqNM0b3Re//rK79uR8nnn7nQI9c8Wp22vfVkXYKxyTdu13lRO1a4OJsiC6GrfOBVcJx9CJWldqp0yoVIupLbyflR1wbnauHou+7igWmf8aaPQeNnp2tfVP2NHYd529TxJAZuiHdtYzUNjU6qcVTYm1dkQbTDvnFM5cwwuNnYk6zoXJVFUtq1jHdtmnmJyla1q217hP55dmpHLlpeLXey8NU6S2E75RgqmGMfWGmODt+PKW6VSHLsUg69kEnKm6JKRclUX6zbUefemilWS7Ne+rv4Zn2JVy/crhVQHZzvbquib5E2QOzavbbzrfIhJPofWycrUhBS8Ma1soKLcnDJtU910XoW8U0gp+jfwpPvx6JfHmK2N+WlgOC08jwk/jRBKfR9OjPoxNpz3eR2s30C4f3lzFwwAf5C/AbyLR2VXi2HNAAAAAElFTkSuQmCC">
+    </body>
+</html>
